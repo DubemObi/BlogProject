@@ -2,10 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const blogModel = require("./blogModel");
 const User = require("../model")
-
+const controller = require("../controller")
 const app = express();
 const port = 4001;
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }))
 const router = express.Router()
 
 // // middleware that is specific to this router
@@ -18,29 +19,9 @@ const router = express.Router()
 //   res.send('About birds')
 // }
 
-app.use(express.json());
 
 
-router.post('/blog', async (request, response) => {
-    const {author} = request.body;
-    //const userId = requestBody.Id;
-    const findUser = await User.findOne(author)
-    if (findUser){
-    const blog = new blogModel(author);
-    await blog.save();
-      return response.status(201).send({
-        status: true,
-        message: "Blog has been succesfully posted",
-        newBlog: blog
-      }
-      );
-    }else {
-        return response.status(401).send({
-            status: false,
-            message: "Be like say u be bot"
-        })
-    }
-    })
+router.post('/blog', controller.createBlog), 
     
   
   router.put('/blog', async (request, response) => {
@@ -60,11 +41,11 @@ router.post('/blog', async (request, response) => {
 
   router.delete('/blog', async (request, response) => {
     const requestBody = request.body;
-    const findBlog = await blogModel.findOneAndDelete({ title: requestBody.title });
+    const findBlog = await blogModel.findById({ id: requestBody.id });
     if (findBlog) {
       return response.status(201).send({
         status: true,
-        message: "User deleted successfully",
+        message: "Blog deleted successfully",
         deletedBlog: findBlog,
       });
     } else {

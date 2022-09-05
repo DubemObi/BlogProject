@@ -11,8 +11,9 @@ const blogjs = require('./blog stuff/blog')
 
 const app = express();
 const port = 4001;
+app.use(express.json()); //middleware comes before route.
 app.use('/', blogjs)
-app.use(express.json());
+
 
 app
   .route("/user")
@@ -25,6 +26,7 @@ app
   .post(async (request, response) => {
     const requestBody = request.body;
     const findEmail = await User.findOne({ email: requestBody.email });
+    
     if (findEmail) {
       return response.status(409).send({
         status: false,
