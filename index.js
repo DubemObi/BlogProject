@@ -36,7 +36,7 @@ app
       const user = new User(requestBody);
 
       await user.save();
-      return response.status(200).send({
+      return response.status(201).send({
         status: true,
         message: "Account has been  created successfully",
         newUser: user,
@@ -50,7 +50,7 @@ app
      findUser.email = request.body.email
      findUser.password = request.body.password
      await findUser.save()
-      return response.status(201).send({
+      return response.status(200).send({
         status: true,
         message: "Account has been updated successfully",
         updatedUser: findUser})
@@ -62,7 +62,8 @@ app
 
   .get(async (response) => {
     const findAllUsers = await User.find();
-    return response.status(201).send({
+    if (findAllUsers)
+    return response.status(200).send({
       status: true,
       message: "All accounts created",
       AllUsers: findAllUsers,
@@ -90,13 +91,13 @@ app
     const reqBody = request.body;
     const findUser = await User.findOneAndDelete({ email: reqBody.email });
     if (findUser) {
-      return response.status(201).send({
+      return response.status(200).send({
         status: true,
         message: "User deleted successfully",
         deletedUser: findUser,
       });
     } else {
-      return response.status(409).send({
+      return response.status(404).send({
         status: false,
         message: "User not found",
       });
