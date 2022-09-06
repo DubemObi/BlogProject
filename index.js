@@ -4,25 +4,17 @@ const mongoose = require("mongoose");
 const User = require("./model");
 require("dotenv/config");
 
-
 const blogjs = require('./blog stuff/blog')
-
-
 
 const app = express();
 const port = 4001;
-app.use(express.json()); //middleware comes before route.
+app.use(express.json()); 
 app.use('/', blogjs)
 
 
 app
   .route("/user")
 
-  // .post(async (request, response) => {
-
-  // })
-
-  
   .post(async (request, response) => {
     const requestBody = request.body;
     const findEmail = await User.findOne({ email: requestBody.email });
