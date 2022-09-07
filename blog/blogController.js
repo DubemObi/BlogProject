@@ -37,7 +37,7 @@ exports.updateBlog = async (request, response) => {
   }
 
   exports.deleteBlog = async (request, response) => {
-    const {id} = request.params
+    const {id} = request.query
     const findBlog = await blogModel.findByIdAndDelete(id);
     if (findBlog) {
       return response.status(201).send({
@@ -54,9 +54,9 @@ exports.updateBlog = async (request, response) => {
 
 exports.getBlog = async (request, response) => {
     const findAllBlogs = await blogModel.find();
-    return response.status(201).send({
+    return response.status(200).send({
       status: true,
-      message: "All accounts created",
+      message: "All blogs created",
       AllBlogs: findAllBlogs,
     });
   }

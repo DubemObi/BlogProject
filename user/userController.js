@@ -16,7 +16,7 @@ exports.createUser = async (request, response) => {
             } else {
               const user = new User(requestBody);
               await user.save();
-              return response.status(200).send({
+              return response.status(201).send({
                 status: true,
                 message: "Account has been  created successfully",
                 newUser: user,
@@ -36,7 +36,7 @@ exports.updateUser = async (request, response) => {
      findUser.email = request.body.email
      findUser.password = request.body.password
      await findUser.save()
-      return response.status(201).send({
+      return response.status(200).send({
         status: true,
         message: "Account has been updated successfully",
         updatedUser: findUser})
@@ -44,7 +44,7 @@ exports.updateUser = async (request, response) => {
 
 exports.getUser = async (request, response) => {
     const findAllUsers = await User.find();
-    return response.status(201).send({
+    return response.status(200).send({
       status: true,
       message: "All accounts created",
       AllUsers: findAllUsers,
@@ -56,7 +56,7 @@ exports.deleteUser = async (request, response) => {
     console.log(id)
     const findUser = await User.findByIdAndDelete(id);
     if (findUser) {
-      return response.status(201).send({
+      return response.status(200).send({
         status: true,
         message: "User deleted successfully",
         deletedUser: findUser,
