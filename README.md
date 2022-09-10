@@ -32,7 +32,7 @@ Wrap Up:
 - Maximum number of user = 5000
 - Maximum capacity per Blog content = 3000 characters (600 words)
 - Maximum number of blogs per day = 100
-  100 words = 1kb
+  [100 words = 1kb].
 
 Estimates:
 User Credentials (name, email, password, phoneNo, username, profile picture = 1mb) or apprx ~ 1.1mb
