@@ -16,7 +16,7 @@ router
   .delete(deleteBlog);
 
 const { getOneBlog } = blogController;
-router.route("/user/:id").get(getOneBlog);
+router.route("/blog/:id").get(getOneBlog);
 
 const { createUser, getAllUsers, updateUser, deleteUser } = userController;
 router

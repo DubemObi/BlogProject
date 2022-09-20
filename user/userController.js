@@ -2,24 +2,27 @@ const { application } = require("express");
 const express = require("express");
 //const mongoose = require("mongoose");
 //const blogModel = require("../blog/blogModel");
+
 const User = require("../user/userModel");
 
-// const errorHandler = (err) => {
-//   if (err.path === "password") {
-//     const passwordError = "Invalid password";
-//     console.log(passwordError, err.path)
-//   }
+const errorHandler = (err) => {
+  console.log(err.message);
+  let error = {
+    name: "",
+    email: "",
+    password: "",
+    phoneNo: "",
+    username: "",
+    profileImage: "",
+  };
 
-//   if (err.path === "email") {
-//     const emailError = "Invalid Email address";
-//   }
-
-//   if (err.path === "_id") {
-//     const idError = "Invalid ID";
-//   }
-
-//   // return { passwordError, emailError, idError };
-// };
+  if (err.message.includes("user validation failed")) {
+    Object.values(err.errors).forEach(({ properties }) => {
+      error[properties.path] = properties.message;
+    });
+  }
+  return error;
+};
 
 exports.createUser = async (request, response) => {
   const requestBody = request.body;
@@ -40,44 +43,34 @@ exports.createUser = async (request, response) => {
       });
     }
   } catch (error) {
-    console.log(error);
-    // console.log(error.errors.email.path, error.errors.email.properties.path);
-    // const errors = errorHandler(error);
-    if (error?.errors?.password?.properties.path === "password") {
-      return response.status(404).send({
-        status: false,
-        message: "Invalid password",
-      });
-    }
-    if (error.errors?.email?.properties.path === "email") {
-      return response.status(404).send({
-        status: false,
-        message: "Invalid email",
-      });
-    } else {
-      return response.status(500).send({
-        status: false,
-        message: "Server Error",
-      });
-    }
-    // return response.status(404).send({
-    //   status: false,
-    //   message: "Invalid inputs",
-    // });
+    const err = errorHandler(error);
+    return response.status(404).json({ err });
   }
 };
 
 exports.updateUser = async (request, response) => {
-  const findUser = await User.findById(request.body.Id);
-  findUser.username = request.body.username;
-  findUser.email = request.body.email;
-  findUser.password = request.body.password;
-  await findUser.save();
-  return response.status(200).send({
-    status: true,
-    message: "Account has been updated successfully",
-    updatedUser: findUser,
-  });
+  try {
+    const findUser = await User.findById(request.body.Id);
+    if (findUser) {
+      findUser.username = request.body.username;
+      findUser.email = request.body.email;
+      findUser.password = request.body.password;
+      await findUser.save();
+      return response.status(200).send({
+        status: true,
+        message: "Account has been updated successfully",
+        updatedUser: findUser,
+      });
+    } else {
+      return response.status(404).send({
+        status: false,
+        message: "User not found",
+      });
+    }
+  } catch (error) {
+    const err = errorHandler(error);
+    return response.status(400).json({ err });
+  }
 };
 
 exports.getUser = async (request, response) => {
@@ -123,7 +116,6 @@ exports.getAllUsers = async (request, response) => {
 
 exports.deleteUser = async (request, response) => {
   const { id } = request.query;
-  console.log(id);
   const findUser = await User.findByIdAndDelete(id);
   if (findUser) {
     return response.status(200).send({

@@ -4,33 +4,39 @@ const bcrypt = require("bcrypt");
 const userSchema = mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, "Enter your name"],
     maxlength: 50,
   },
   email: {
     type: String,
-    required: true,
-    match:
+    required: [true, "Enter an email address"],
+    match: [
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      "Enter a valid email address",
+    ],
   },
   password: {
     type: String,
-    required: true,
-    match: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
+    required: [true, "Enter a password"],
+    match: [
+      /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
+      "Minimum password length is 6 characters and should contain Upper and lowercase and Special characters ",
+    ],
   },
   phoneNo: {
     type: String,
-    required: true,
+    required: [true, "Enter a phone number"],
     maxlength: 14,
   },
   username: {
     type: String,
-    required: true,
+    required: [true, " enter your username"],
+    unique: true,
     maxlength: 50,
   },
   profileImage: {
     type: String,
-    required: true,
+    required: [true, "Enter image URL"],
   },
 });
 
